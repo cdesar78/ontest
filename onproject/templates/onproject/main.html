@@ -1,0 +1,140 @@
+<html>
+<header>
+
+
+<title>OnTwitter</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+<style type="text/css">
+	.comment {
+    border: none;
+    overflow: auto;
+    outline: none;
+
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+	.none::-webkit-resizer {
+    display: none;
+}
+</style>
+
+<script type="text/javascript">
+	
+function post_comment() {
+
+	 $.ajax({
+      type: "POST",
+      url: 'http://127.0.0.1:8000/onproject/post_comment',
+      data: {
+        comment: $("#current_comment").val()
+      },
+      success: function(success){
+        $("#current_comment").val('');
+        window.location.reload(false); 
+      }    
+    });
+
+}
+
+
+function like_comment(comment_id) {
+	$.ajax({
+      type: "POST",
+      url: 'http://127.0.0.1:8000/onproject/like_comment',
+      data: {
+        comment_id: comment_id
+      },
+      success: function(success){
+        window.location.reload(false); 
+      }    
+    });
+
+}
+
+
+function unlike_comment(comment_id) {
+	$.ajax({
+      type: "POST",
+      url: 'http://127.0.0.1:8000/onproject/unlike_comment',
+      data: {
+        comment_id: comment_id
+      },
+      success: function(success){
+        window.location.reload(false); 
+      }    
+    });
+
+}
+</script>
+
+</header>
+
+<body>
+
+
+	<h2> Hello {{ uname }} <h2>
+
+	<form action="logout" method="post">
+		{% csrf_token %}
+		<input type="submit" value="log out"></input>
+	</form>
+
+
+
+ {% if comment_list%}
+ {% for comment in comment_list %}
+
+	<textarea class="comment none" readonly cols="80" rows="3" style="margin-top: 10px; border: 1px solid gray; background: rgb(224, 234, 241);">
+by {{ comment.username }}:	
+	{{ comment.comment }} 
+
+	</textarea>
+    {% if comment.likes > 0 %}
+    	{% if liked_comments %}
+  			{% for like in liked_comments %}
+  				{% if like.comment_id == comment.id %}
+  		  			<button style="clear: both; display: block;" onclick= "unlike_comment({{ comment.id }})"> unlike </button>
+  				{% else %}
+  					{% if forloop.last %}
+  						<button style="clear: both; display: block;" onclick= "like_comment({{ comment.id }})"> like </button>
+  					{% endif %}
+  				{% endif %}
+  			{% endfor %}
+  		{% else %}
+  			<button style="clear: both; display: block;" onclick= "like_comment({{ comment.id }})"> like </button>
+  		{% endif %}
+   	{% else %}
+  		<button style="clear: both; display: block;" onclick= "like_comment({{ comment.id }})"> Like </button>
+  	{% endif %}
+	
+	<p style="font-size: 13px; margin-top: -17px; margin-left: 50px;"> {{ comment.likes }} likes </p>
+
+
+  {% endfor %}
+  {% else %}
+
+    <p>No comments to display</p>
+
+  {% endif %}
+
+
+
+<textarea id="current_comment" style="margin-top: 10px;" rows="4" cols="80" placeholder="Leave a comment here...">
+</textarea>
+
+<br>
+
+	<button onclick= "post_comment()"> Post </button>
+
+</body>
+</html>
+
+
+
+
+
+
+
