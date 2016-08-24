@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views.decorators.csrf import csrf_exempt
 
-from models import User, Comment, Like
+from onproject.models import User, Comment, Like
 
 
 def index(request):
