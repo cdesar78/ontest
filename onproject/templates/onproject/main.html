@@ -11,7 +11,6 @@
     border: none;
     overflow: auto;
     outline: none;
-
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
     box-shadow: none;
@@ -24,7 +23,6 @@
 <script type="text/javascript">
 	
 function post_comment() {
-
 	 $.ajax({
       type: "POST",
       url: 'http://127.0.0.1:8000/onproject/post_comment',
@@ -36,10 +34,7 @@ function post_comment() {
         window.location.reload(false); 
       }    
     });
-
 }
-
-
 function like_comment(comment_id) {
 	$.ajax({
       type: "POST",
@@ -51,10 +46,7 @@ function like_comment(comment_id) {
         window.location.reload(false); 
       }    
     });
-
 }
-
-
 function unlike_comment(comment_id) {
 	$.ajax({
       type: "POST",
@@ -66,7 +58,6 @@ function unlike_comment(comment_id) {
         window.location.reload(false); 
       }    
     });
-
 }
 </script>
 
@@ -131,10 +122,4 @@ by {{ comment.username }}:
 
 </body>
 </html>
-
-
-
-
-
-
 

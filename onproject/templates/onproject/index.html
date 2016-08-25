@@ -7,9 +7,9 @@
 <form method="post" action="log_in">
 {% csrf_token %}
   Username:<br>
-  <input type="text" name="uname"><br>
+  {{ login_form.username }}<br>
   Password:<br>
-  <input type="password" name="pwd"><br><br>
+  {{ login_form.pwd }}<br><br>
   <input type="submit" value="Log In">
 </form>
 
@@ -19,17 +19,17 @@
 <h2> Sign Up: </h2>
 
 <form method="post" action="create_user">
-   {% csrf_token %}
+    {% csrf_token %}
   First Name:<br>
-  <input type="text" name="firstname"><br>
+  {{ user_form.name }}<br>
   Last Name:<br>
-  <input type="text" name="lastname"><br>
+  {{ user_form.sirname }}<br>
   Username:<br>
-  <input type="text" name="uname"><br>
+  {{ user_form.username }}<br>
   Password:<br>
-  <input type="password" name="pwd"><br>
+  {{ user_form.pwd }}<br>
   email:<br>
-  <input type="text" name="email"><br><br>
+  {{ user_form.email }}<br><br>
   <input type="submit" value="Create Account">
 </form>
 

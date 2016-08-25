@@ -2,13 +2,16 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views.decorators.csrf import csrf_exempt
+from .forms import UserForm, LoginForm
 
-from onproject.models import User, Comment, Like
+from models import User, Comment, Like
 
 
 def index(request):
 
-    return render(request, 'onproject/index.html', {})
+    user_form = UserForm()
+    login_form = LoginForm()
+    return render(request, 'onproject/index.html', {'user_form' : user_form, 'login_form' : login_form})
 
 def main(request):
     uname = ''
@@ -24,30 +27,33 @@ def main(request):
 def create_user(request):
 
     if request.method == 'POST':
-        name = request.POST.get("firstname")
-        lname = request.POST.get("lastname")
-        uname = request.POST.get("uname")
-        pwd = request.POST.get("pwd")
-        email = request.POST.get("email")
-        if User.objects.filter(username=uname).exists():
-            return render(request, 'onproject/index.html', {})
-        user = User(username = uname,pwd = pwd, name =  name, sirname = lname, email = email)
-        user.save()
-        request.session['uname'] = uname
-        return HttpResponseRedirect(reverse('main'))
-    return HttpResponseRedirect(reverse('main'))
+        form = UserForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data["name"]
+            lname = form.cleaned_data["sirname"]
+            uname = form.cleaned_data["username"]
+            pwd = form.cleaned_data["pwd"]
+            email = form.cleaned_data["email"]
+            if User.objects.filter(username=uname).exists():
+                return HttpResponseRedirect(reverse('index'))
+            user = User(username = uname,pwd = pwd, name =  name, sirname = lname, email = email)
+            user.save()
+            request.session['uname'] = uname
+            return HttpResponseRedirect(reverse('main'))
+    return HttpResponseRedirect(reverse('index'))
 
 
 def log_in(request):
 
     if request.method == 'POST':
-        uname = request.POST.get("uname")
-        pwd = request.POST.get("pwd")
-        if User.objects.filter(username=uname, pwd = pwd).exists():
-            request.session['uname'] = uname
-            return HttpResponseRedirect(reverse('main'))
-
-    return HttpResponseRedirect(reverse('index'))
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            uname = form.cleaned_data["username"]
+            pwd = form.cleaned_data["pwd"]
+            if User.objects.filter(username=uname, pwd = pwd).exists():
+                request.session['uname'] = uname
+                return HttpResponseRedirect(reverse('main'))
+        return HttpResponseRedirect(reverse('index'))
 
 
 @csrf_exempt
@@ -88,4 +94,10 @@ def unlike_comment(request):
         unliked_comment.save()
         Like.objects.get(username = uname, comment_id = comment_id).delete()
     return HttpResponse('Done')
+
+
+
+
+
+
 
