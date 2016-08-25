@@ -2,9 +2,9 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views.decorators.csrf import csrf_exempt
-from .forms import UserForm, LoginForm
+from onproject.forms import UserForm, LoginForm
 
-from models import User, Comment, Like
+from onproject.models import User, Comment, Like
 
 
 def index(request):
